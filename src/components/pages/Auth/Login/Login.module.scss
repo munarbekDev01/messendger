@@ -1,0 +1,117 @@
+.Login {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background: linear-gradient(135deg, #1e3a8a, #0f172a);
+    color: white;
+
+    .container {
+        width: 100%;
+        max-width: 400px;
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 16px;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        text-align: center;
+    }
+
+    .content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        h1 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: #fbbf24;
+            text-transform: uppercase;
+        }
+
+        .error {
+            color: #ff7d00;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            align-items: center;
+            justify-content: center;
+            input {
+                width:100%;
+                padding: 12px;
+                margin: 8px 0;
+                border: none;
+                border-radius: 8px;
+                outline: none;
+                background: rgba(255, 255, 255, 0.2);
+                color: white;
+                transition: 0.3s;
+
+                &::placeholder {
+                    color: rgba(255, 255, 255, 0.7);
+                }
+
+                &:focus {
+                    background: rgba(255, 255, 255, 0.3);
+                    transform: scale(1.05);
+                }
+            }
+
+            button {
+                background-color: #fbbf24;
+                color: black;
+                padding: 12px;
+                width: 100%;
+                border-radius: 8px;
+                border: none;
+                cursor: pointer;
+                font-weight: bold;
+                transition: all 0.3s ease;
+
+                &:hover {
+                    background-color: #ff7d00;
+                    transform: scale(1.1);
+                }
+
+                &:active {
+                    transform: scale(0.9);
+                }
+            }
+        }
+
+        p {
+            margin-top: 15px;
+            font-size: 14px;
+
+            a {
+                color: #fbbf24;
+                cursor: pointer;
+                border-bottom: 2px solid #fbbf24;
+                transition: 0.3s;
+
+                &:hover {
+                    color: #ff7d00;
+                    border-bottom: 2px solid #ff7d00;
+                }
+            }
+        }
+    }
+}
+
+/* Адаптивность */
+@media (max-width: 480px) {
+    .Login {
+        .container {
+            max-width: 90%;
+        }
+
+        .content form {
+            width: 100%;
+        }
+    }
+}
