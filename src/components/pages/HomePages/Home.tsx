@@ -1,7 +1,3 @@
-
-
-
-
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -17,13 +13,30 @@ const Home = () => {
     const [modalOpen, setModalOpen] = useState<boolean>(false);
     const [modalOpen2, setModalOpen2] = useState<boolean>(false);
     const [chatName, setChatName] = useState<string>("");
+    const [local, setLocal] = useState<{ user?: string } | null>(null);
+    const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
-    // Проверяем доступность localStorage
-    const storedAuth = typeof window !== "undefined" ? localStorage.getItem("auth") : null;
-    const local = storedAuth ? JSON.parse(storedAuth) : null;
+    // Загружаем данные из localStorage только в браузере
+    useEffect(() => {
+        if (typeof window !== "undefined") {
+            const storedAuth = localStorage.getItem("auth");
+            setLocal(storedAuth ? JSON.parse(storedAuth) : null);
+        }
+    }, []);
 
-    const objParticipant = { key: chatName, id: Date.now(), user_name: local?.user, rank: "Participant" };
-    const objCreator = { key: chatName, id: Date.now(), user_name: local?.user, rank: "Creator" };
+    // Обновляем размеры окна для Confetti
+    useEffect(() => {
+        if (typeof window !== "undefined") {
+            setDimensions({ width: window.innerWidth, height: window.innerHeight });
+
+            const handleResize = () => {
+                setDimensions({ width: window.innerWidth, height: window.innerHeight });
+            };
+
+            window.addEventListener("resize", handleResize);
+            return () => window.removeEventListener("resize", handleResize);
+        }
+    }, []);
 
     useEffect(() => {
         setTimeout(() => setShowConfetti(false), 15000);
@@ -37,6 +50,9 @@ const Home = () => {
         router.push("/auth/login");
     };
 
+    const objParticipant = { key: chatName, id: Date.now(), user_name: local?.user, rank: "Participant" };
+    const objCreator = { key: chatName, id: Date.now(), user_name: local?.user, rank: "Creator" };
+
     const handleJoinChat = () => {
         if (chatName.trim()) {
             router.push(`/chat?params=${encodeURIComponent(JSON.stringify(objParticipant))}`);
@@ -44,11 +60,6 @@ const Home = () => {
         }
     };
 
-    const handleRoute = () => {
-        setModalOpen(true);
-    };
-
-    
     const handleCreateChat = () => {
         if (chatName.trim()) {
             router.push(`/chat?params=${encodeURIComponent(JSON.stringify(objCreator))}`);
@@ -63,14 +74,14 @@ const Home = () => {
             animate={{ opacity: 1 }}
             transition={{ duration: 1 }}
         >
-                {showConfetti && (
+            {showConfetti && (
                 <Confetti
                     style={{
                         opacity: !timer ? "0" : "1",
                         transition: "0.6s ease-in-out",
                     }}
-                    width={window.innerWidth}
-                    height={window.innerHeight}
+                    width={dimensions.width}
+                    height={dimensions.height}
                     numberOfPieces={200}
                 />
             )}
@@ -92,10 +103,7 @@ const Home = () => {
             <motion.p
                 className={scss.description}
                 initial={{ x: -10 }}
-                animate={{
-                    x: 0,
-                    y: [0, -2, 0, 2, 0],
-                }}
+                animate={{ x: 0, y: [0, -2, 0, 2, 0] }}
                 transition={{
                     duration: 1.2,
                     ease: "easeInOut",
@@ -109,30 +117,17 @@ const Home = () => {
                 <motion.button
                     whileHover={{ scale: 1.2 }}
                     whileTap={{ scale: 0.9 }}
-                    animate={{
-                        rotate: [360],
-                    }}
-                    transition={{
-                        duration: 2,
-                        repeat: Infinity,
-                        ease: "easeInOut",
-                    }}
-                    onClick={handleRoute}
+                    animate={{ rotate: [360] }}
+                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                    onClick={() => setModalOpen(true)}
                 >
                     Войти в чат
                 </motion.button>
                 <motion.button
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
-                    animate={{
-                        rotate: [0, 5, -5, 0],
-                        y: [0, -4, 0, 4, 0],
-                    }}
-                    transition={{
-                        duration: 2,
-                        repeat: Infinity,
-                        ease: "easeInOut",
-                    }}
+                    animate={{ rotate: [0, 5, -5, 0], y: [0, -4, 0, 4, 0] }}
+                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
                     onClick={() => setModalOpen2(true)}
                 >
                     Создать чат
@@ -143,19 +138,12 @@ const Home = () => {
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
                 onClick={handleLogout}
-                animate={{
-                    rotate: [0, 10, 0, -10, 0],
-                    y: [0, -4, 0, 4, 0],
-                }}
-                transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                }}
+                animate={{ rotate: [0, 10, 0, -10, 0], y: [0, -4, 0, 4, 0] }}
+                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
             >
                 Выйти
             </motion.button>
-            {modalOpen   && (
+            {modalOpen && (
                 <div className={scss.modalOverlay} onClick={() => setModalOpen(false)}>
                     <motion.div
                         className={scss.modal}
@@ -165,18 +153,18 @@ const Home = () => {
                         transition={{ duration: 0.5 }}
                     >
                         <AiOutlineClose className={scss.closeIcon} onClick={() => setModalOpen(false)} />
-                        <h2>{modalOpen ? "Напишите сюда название чата" : "Придумайте название чату"}</h2>
+                        <h2>Напишите сюда название чата</h2>
                         <input
                             type="text"
                             value={chatName}
                             onChange={(e) => setChatName(e.target.value)}
                             placeholder="Название чата"
                         />
-                        <button onClick={modalOpen ? handleJoinChat : handleCreateChat}>{modalOpen ? "Вступить в чат" : "Создать чат"}</button>
+                        <button onClick={handleJoinChat}>Вступить в чат</button>
                     </motion.div>
                 </div>
             )}
-            {modalOpen2  && (
+            {modalOpen2 && (
                 <div className={scss.modalOverlay} onClick={() => setModalOpen2(false)}>
                     <motion.div
                         className={scss.modal}
@@ -186,14 +174,14 @@ const Home = () => {
                         transition={{ duration: 0.5 }}
                     >
                         <AiOutlineClose className={scss.closeIcon} onClick={() => setModalOpen2(false)} />
-                        <h2>{modalOpen ? "Напишите сюда название чата" : "Придумайте название чату"}</h2>
+                        <h2>Придумайте название чату</h2>
                         <input
                             type="text"
                             value={chatName}
                             onChange={(e) => setChatName(e.target.value)}
                             placeholder="Название чата"
                         />
-                        <button onClick={modalOpen ? handleJoinChat : handleCreateChat}>{modalOpen ? "Вступить в чат" : "Создать чат"}</button>
+                        <button onClick={handleCreateChat}>Создать чат</button>
                     </motion.div>
                 </div>
             )}
