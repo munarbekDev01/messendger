@@ -10,8 +10,6 @@ interface ChatProps {
   }
 }
 
-
-
 const WebsocketChat: FC<ChatProps> = ({ data }) => {
   const [messages, setMessages] = useState<{ text: string; type: "sent" | "received"; time: number; user_name: string }[]>([]);
   const [input, setInput] = useState<string>("");
