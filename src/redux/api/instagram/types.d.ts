@@ -27,12 +27,13 @@ namespace INSTA  {
   
   type LoginRes = {
     data: {
-      user: {
-        username: string
-        email: string
-      }
       access: string 
       refresh: string
+      user: {
+        email: string
+        username: string
+      }
+      
     }
   }
 

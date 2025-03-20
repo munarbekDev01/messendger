@@ -44,30 +44,22 @@ const Register: FC = () => {
             await post(newReg).unwrap();
             alert("Successfully registered");
             try {
-                const res = await logPost({ username: data.username, password: data.password }).unwrap();
-                if (!res) return;
-            
-                if (typeof window !== "undefined") {
-                    localStorage.setItem("auth", JSON.stringify({
-                        user: res.data.user.username,
-                        email: res.data.user.email,
-                        access: res.data.access,
-                    }));
-                }
-                
-                localStorage.setItem(
-                    "auth",
-                    JSON.stringify({
-                        user: res.data.user.username,
-                        email: res.data.user.email,
-                        access: res.data.access,
-                    })
-                );
-                router.push("/");
-            } catch (error) {
-                alert("не получилось сразу войти в аккаунт попробуйте вручную войти");
-            }
-            
+    const res = await logPost({ username: data.username, password: data.password }).unwrap();
+    if (!res) return;
+
+    localStorage.setItem(
+        "auth",
+        JSON.stringify({
+            user: res.data.user.username,
+            email: res.data.user.email,
+            access: res.data.access,
+        })
+    );
+    router.push("/");
+} catch (error) {
+    alert("не получилось сразу войти в аккаунт попробуйте вручную войти");
+}
+
         } catch (error) {
             setErrorMessage("Ошибка регистрации. Проверьте данные.");
         }

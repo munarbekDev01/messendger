@@ -11,17 +11,6 @@ interface ILoginInput {
     password: string;
 }
 
-interface LoginResponse {
-    data: {
-        user: {
-            username: string;
-            email: string;
-        };
-        access: string;
-        refresh: string;
-    };
-}
-
 const Login: FC = () => {
     const { register, handleSubmit } = useForm<ILoginInput>();
     const router = useRouter();
@@ -31,27 +20,11 @@ const Login: FC = () => {
     const onSubmit: SubmitHandler<ILoginInput> = async (data) => {
         setErrorMessage("");
         try {
-            const response = await post(data);
+            const res : any = await post(data);
+            console.log(res);
             
-            // Check if the response is an error or if it doesn't have the expected structure
-            if ('error' in response || !('data' in response)) {
-                setErrorMessage("Ошибка входа. Проверьте логин и пароль.");
-                return;
-            }
-            
-            const res = response.data as LoginResponse;
-            
-            if (!res.data) {
-                setErrorMessage("Ошибка входа. Неверный формат ответа.");
-                return;
-            }
-            
-            localStorage.setItem("auth", JSON.stringify({
-                user: res.data.user.username,
-                email: res.data.user.email,
-                access: res.data.access
-            }));
-            
+            if (!res) return ;
+            localStorage.setItem("auth",JSON.stringify({user : res.data.user.username , email : res?.data?.user?.email, access : res?.data?.access }) );
             router.push("/");
         } catch (error) {
             setErrorMessage("Ошибка входа. Проверьте логин и пароль.");
