@@ -3,11 +3,12 @@ import React, { Suspense } from "react";
 import WebsocketChat from "@/components/pages/WebSocetPages/WebsocketChat";
 import { useSearchParams } from "next/navigation";
 
-const Page = () => {
+const page = () => {
   const searchParams = useSearchParams();
   const stringData = searchParams.get("params");
   const data = stringData ? JSON.parse(stringData) : null;
 
+  // Wrap the WebsocketChat with Suspense to prevent prerendering issues
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <div>
@@ -17,4 +18,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default page;
