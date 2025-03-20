@@ -2,7 +2,17 @@
 import { FC, useEffect, useState, useRef } from "react";
 import scss from "./WebsocketChat.module.scss";
 
-const WebsocketChat: FC<any> = ({ data }) => {
+interface ChatProps {
+  data: {
+    key: string;
+    id: number;
+    user_name: string;
+  }
+}
+
+
+
+const WebsocketChat: FC<ChatProps> = ({ data }) => {
   const [messages, setMessages] = useState<{ text: string; type: "sent" | "received"; time: number; user_name: string }[]>([]);
   const [input, setInput] = useState<string>("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -56,7 +66,7 @@ const WebsocketChat: FC<any> = ({ data }) => {
     return () => {
       ws.close();
     };
-  }, [data.key, lok.access]);
+  }, [data.key, lok.access, data.id]);
 
   useEffect(() => {
     // Прокрутка вниз при добавлении нового сообщения

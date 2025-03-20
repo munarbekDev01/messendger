@@ -8,9 +8,10 @@ namespace INSTA  {
     age: number
     phone_number: string
     bio: string
-    image: any
+    image: File | string | null
     website: string
   }
+  
   type RegisterReq = {
     username: string
     email: string
@@ -25,7 +26,7 @@ namespace INSTA  {
 
   
   type LoginRes = {
-    data : {
+    data: {
       user: {
         username: string
         email: string
@@ -33,7 +34,6 @@ namespace INSTA  {
       access: string 
       refresh: string
     }
-   
   }
 
   type LoginReq = {
@@ -44,15 +44,15 @@ namespace INSTA  {
 
   type PostRes = {
     count: number
-    next: any
-    previous: any
+    next: string | null
+    previous: string | null
     results: Array<{
       id: number
       user: {
         username: string
       }
-      image?: string
-      video: any
+      image?: string  
+      video: File | string | null
       description: string
       hashtag?: string
       count_post_like: number
@@ -62,7 +62,7 @@ namespace INSTA  {
           username: string
         }
         text: string
-        parent: any
+        parent: number | null
         get_count_comment_like: number
         created_at: string
       }>
@@ -70,9 +70,4 @@ namespace INSTA  {
   }
   
   type PostReq = void
-  
-  
-
-  
-  
 }

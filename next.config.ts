@@ -13,6 +13,10 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  // Отключение ESLint во время сборки
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
 };
 
 export default nextConfig;

@@ -1,6 +1,6 @@
 "use client"
 import WebsocketChat from '@/components/pages/WebSocetPages/WebsocketChat';
-import { ReadonlyURLSearchParams, useParams, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import React from 'react';
 
 const page = () => {
