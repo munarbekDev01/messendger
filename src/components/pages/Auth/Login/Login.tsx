@@ -20,17 +20,35 @@ const Login: FC = () => {
     const onSubmit: SubmitHandler<ILoginInput> = async (data) => {
         setErrorMessage("");
         try {
-            const res : any = await post(data);
-            console.log(res);
-            
-            if (!res) return ;
-            localStorage.setItem("auth",JSON.stringify({user : res.data.user.username , email : res?.data?.user?.email, access : res?.data?.access }) );
+            const res = await post(data);
+    
+            // Проверка, что res содержит data
+            if (!("data" in res) || !res.data) {
+                setErrorMessage("Ошибка входа. Проверьте логин и пароль.");
+                return;
+            }
+
+            const { user, access } = res.data;
+    
+            // Проверяем, что user и access существуют
+            if (!user || !access) {
+                setErrorMessage("Ошибка входа. Некорректный ответ от сервера.");
+                return;
+            }
+    
+            // Сохраняем данные в localStorage
+            localStorage.setItem("auth", JSON.stringify({ 
+                user: user.username, 
+                email: user.email, 
+                access 
+            }));
+    
             router.push("/");
         } catch (error) {
-            setErrorMessage("Ошибка входа. Проверьте логин и пароль.");
+            setErrorMessage("Ошибка входа. Попробуйте снова.");
         }
     };
-
+    
     return (
         <motion.section 
             className={scss.Login}

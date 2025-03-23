@@ -41,7 +41,7 @@ const Register: FC = () => {
             password: data.password,
         };
         try {
-            await post(newReg).unwrap();
+            await post(newReg)
             alert("Successfully registered");
             try {
     const res = await logPost({ username: data.username, password: data.password }).unwrap();
@@ -50,9 +50,9 @@ const Register: FC = () => {
     localStorage.setItem(
         "auth",
         JSON.stringify({
-            user: res.data.user.username,
-            email: res.data.user.email,
-            access: res.data.access,
+            user: res.user.username,
+            email: res.user.email,
+            access: res.access,
         })
     );
     router.push("/");

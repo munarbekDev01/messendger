@@ -5,8 +5,14 @@ import { motion } from "framer-motion";
 import Confetti from "react-confetti";
 import { AiOutlineClose } from "react-icons/ai";
 import scss from "./Home.module.scss";
-
+import axios, {  } from "axios";
 const Home = () => {
+    useEffect(( ) => {
+        axios.get("http://13.60.7.3/post/").then((res) => {
+            console.log(res, "sdsdfs");
+            
+        })
+    }, [])
     const router = useRouter();
     const [showConfetti, setShowConfetti] = useState<boolean>(true);
     const [timer, setTimer] = useState<boolean>(true);

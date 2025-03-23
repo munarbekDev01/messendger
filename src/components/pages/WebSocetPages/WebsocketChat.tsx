@@ -17,9 +17,10 @@ const WebsocketChat: FC<ChatProps> = ({ data }) => {
   const socketRef = useRef<WebSocket | null>(null);
   const lokRes = localStorage.getItem("auth")
   const lok = lokRes ? JSON.parse(lokRes) : null
-
   useEffect(() => {
-    const ws = new WebSocket(`ws://13.61.145.40/ws/chat/${data.key}/?token=${lok.access}`);
+    console.log(data.key, "Sdfsdfs");
+    
+    const ws = new WebSocket(`ws://13.60.7.3/ws/chat/${data.key}/?token=${lok.access}`);
 
     ws.onopen = () => {
       console.log("WebSocket: Соединение установлено");

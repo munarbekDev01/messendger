@@ -1,10 +1,9 @@
-import { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
+const nextConfig = {
+  devIndicators: false, // Отключает Dev Tools
   async headers() {
     return [
       {
-        source: "/api/:path*", // Разрешаем CORS для всех API маршрутов
+        source: "/api/:path*",
         headers: [
           { key: "Access-Control-Allow-Origin", value: "*" },
           { key: "Access-Control-Allow-Methods", value: "GET, POST, PUT, DELETE, OPTIONS" },
@@ -13,7 +12,6 @@ const nextConfig: NextConfig = {
       },
     ];
   },
-  // Отключение ESLint во время сборки
   eslint: {
     ignoreDuringBuilds: true,
   },
