@@ -25,7 +25,7 @@ const LayoutSite: FC<ILayoutSiteProps> = ({ children }) => {
 
     useEffect(() => {
         if (typeof window !== "undefined" && pathName !== "/auth/login" && pathName !== "/auth/register") {
-            const auth = localStorage.getItem("auth");
+            const auth = sessionStorage.getItem("auth");
             if (!auth) {
                 router.push("/auth/register");
             }

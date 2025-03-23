@@ -15,7 +15,7 @@ const WebsocketChat: FC<ChatProps> = ({ data }) => {
   const [input, setInput] = useState<string>("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const socketRef = useRef<WebSocket | null>(null);
-  const lokRes = localStorage.getItem("auth")
+  const lokRes = sessionStorage.getItem("auth")
   const lok = lokRes ? JSON.parse(lokRes) : null
   useEffect(() => {
     console.log(data.key, "Sdfsdfs");

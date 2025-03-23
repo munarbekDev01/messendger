@@ -44,8 +44,8 @@ const Login: FC = () => {
 
             // Проверка на клиентскую сторону
             if (isClient) {
-                // Сохраняем данные в localStorage
-                localStorage.setItem("auth", JSON.stringify({ 
+                // Сохраняем данные в sessionStorage
+                sessionStorage.setItem("auth", JSON.stringify({ 
                     user: user.username, 
                     email: user.email, 
                     access 

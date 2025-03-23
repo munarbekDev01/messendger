@@ -52,9 +52,8 @@ const Register: FC = () => {
                 const res = await logPost({ username: data.username, password: data.password }).unwrap();
                 if (!res) return;
 
-                // Сохраняем данные в localStorage только на клиенте
                 if (isClient) {
-                    localStorage.setItem(
+                    sessionStorage.setItem(
                         "auth",
                         JSON.stringify({
                             user: res.user.username,
@@ -63,6 +62,7 @@ const Register: FC = () => {
                         })
                     );
                 }
+                
                 router.push("/");
             } catch (error) {
                 alert("не получилось сразу войти в аккаунт попробуйте вручную войти");

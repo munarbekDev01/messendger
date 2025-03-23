@@ -23,10 +23,9 @@ const Home = () => {
         setIsClient(true); // Отмечаем, что код выполняется на клиенте
     }, []);
 
-    // Загружаем данные из localStorage только в браузере
     useEffect(() => {
         if (isClient) {
-            const storedAuth = localStorage.getItem("auth");
+            const storedAuth = sessionStorage.getItem("auth");
             setLocal(storedAuth ? JSON.parse(storedAuth) : null);
         }
     }, [isClient]);
@@ -52,7 +51,7 @@ const Home = () => {
 
     const handleLogout = () => {
         if (isClient) {
-            localStorage.removeItem("auth");
+            sessionStorage.removeItem("auth");
         }
         router.push("/auth/login");
     };
