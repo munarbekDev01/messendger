@@ -8,7 +8,7 @@ interface ILayoutSiteProps {
 }
 const ReduxProvider: FC<ILayoutSiteProps> = ({children}) => {
   return (
-     <ApiProvider   api={api}>{children}</ApiProvider>
+     <ApiProvider api={api}>{children}</ApiProvider>
   );
 };
 

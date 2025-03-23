@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { FC, ReactNode, useEffect } from "react";
 import scss from "./LayoutSite.module.scss";
 import Header from "./Header/Header";
@@ -24,16 +24,13 @@ const LayoutSite: FC<ILayoutSiteProps> = ({ children }) => {
     }, [pathName]);
 
     useEffect(() => {
-        if (pathName !== "/auth/login" && pathName !== "/auth/register") {
+        if (typeof window !== "undefined" && pathName !== "/auth/login" && pathName !== "/auth/register") {
             const auth = localStorage.getItem("auth");
             if (!auth) {
                 router.push("/auth/register");
             }
         }
     }, [pathName, router]);
-
-
-
 
     return (
         <div className={scss.LayoutSite}>

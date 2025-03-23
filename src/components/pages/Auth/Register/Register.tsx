@@ -1,5 +1,5 @@
 "use client";
-import { FC, useState } from "react";
+import { FC, useState, useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import scss from "./Register.module.scss";
 import { useLoginPostMutation, useRegisterPostMutation } from "@/redux/api/instagram";
@@ -21,10 +21,15 @@ interface IFormInput {
 
 const Register: FC = () => {
     const [post] = useRegisterPostMutation();
-    const [logPost] = useLoginPostMutation()
+    const [logPost] = useLoginPostMutation();
     const { register, handleSubmit } = useForm<IFormInput>();
     const router = useRouter();
     const [errorMessage, setErrorMessage] = useState("");
+    const [isClient, setIsClient] = useState(false); // Убедимся, что код работает на клиенте
+
+    useEffect(() => {
+        setIsClient(true); // Устанавливаем флаг, когда компонент загружен в браузере
+    }, []);
 
     const onSubmit: SubmitHandler<IFormInput> = async (data) => {
         setErrorMessage("");
@@ -36,30 +41,32 @@ const Register: FC = () => {
             age: Number(data.age),
             phone_number: data.phone_number,
             bio: data.bio || "string",
-            image:  null,
+            image: null,
             website: data.website,
             password: data.password,
         };
         try {
-            await post(newReg)
+            await post(newReg);
             alert("Successfully registered");
             try {
-    const res = await logPost({ username: data.username, password: data.password }).unwrap();
-    if (!res) return;
+                const res = await logPost({ username: data.username, password: data.password }).unwrap();
+                if (!res) return;
 
-    localStorage.setItem(
-        "auth",
-        JSON.stringify({
-            user: res.user.username,
-            email: res.user.email,
-            access: res.access,
-        })
-    );
-    router.push("/");
-} catch (error) {
-    alert("не получилось сразу войти в аккаунт попробуйте вручную войти");
-}
-
+                // Сохраняем данные в localStorage только на клиенте
+                if (isClient) {
+                    localStorage.setItem(
+                        "auth",
+                        JSON.stringify({
+                            user: res.user.username,
+                            email: res.user.email,
+                            access: res.access,
+                        })
+                    );
+                }
+                router.push("/");
+            } catch (error) {
+                alert("не получилось сразу войти в аккаунт попробуйте вручную войти");
+            }
         } catch (error) {
             setErrorMessage("Ошибка регистрации. Проверьте данные.");
         }

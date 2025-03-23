@@ -1,38 +1,39 @@
-"use client";
+"use client"
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import Confetti from "react-confetti";
 import { AiOutlineClose } from "react-icons/ai";
 import scss from "./Home.module.scss";
-import axios, {  } from "axios";
+import axios from "axios";
+
 const Home = () => {
-    useEffect(( ) => {
-        axios.get("http://13.60.7.3/post/").then((res) => {
-            console.log(res, "sdsdfs");
-            
-        })
-    }, [])
-    const router = useRouter();
+    const [isClient, setIsClient] = useState(false); // Для проверки, что код выполняется в браузере
+    const [local, setLocal] = useState<{ user?: string } | null>(null);
+    const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
     const [showConfetti, setShowConfetti] = useState<boolean>(true);
     const [timer, setTimer] = useState<boolean>(true);
     const [modalOpen, setModalOpen] = useState<boolean>(false);
     const [modalOpen2, setModalOpen2] = useState<boolean>(false);
     const [chatName, setChatName] = useState<string>("");
-    const [local, setLocal] = useState<{ user?: string } | null>(null);
-    const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+
+    const router = useRouter();
+
+    useEffect(() => {
+        setIsClient(true); // Отмечаем, что код выполняется на клиенте
+    }, []);
 
     // Загружаем данные из localStorage только в браузере
     useEffect(() => {
-        if (typeof window !== "undefined") {
+        if (isClient) {
             const storedAuth = localStorage.getItem("auth");
             setLocal(storedAuth ? JSON.parse(storedAuth) : null);
         }
-    }, []);
+    }, [isClient]);
 
     // Обновляем размеры окна для Confetti
     useEffect(() => {
-        if (typeof window !== "undefined") {
+        if (isClient) {
             setDimensions({ width: window.innerWidth, height: window.innerHeight });
 
             const handleResize = () => {
@@ -42,7 +43,7 @@ const Home = () => {
             window.addEventListener("resize", handleResize);
             return () => window.removeEventListener("resize", handleResize);
         }
-    }, []);
+    }, [isClient]);
 
     useEffect(() => {
         setTimeout(() => setShowConfetti(false), 15000);
@@ -50,7 +51,7 @@ const Home = () => {
     }, []);
 
     const handleLogout = () => {
-        if (typeof window !== "undefined") {
+        if (isClient) {
             localStorage.removeItem("auth");
         }
         router.push("/auth/login");

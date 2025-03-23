@@ -1,5 +1,5 @@
 "use client";
-import { FC, useState } from "react";
+import { FC, useState, useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import scss from "./Login.module.scss";
 import { useRouter } from "next/navigation";
@@ -16,6 +16,12 @@ const Login: FC = () => {
     const router = useRouter();
     const [post] = useLoginPostMutation();
     const [errorMessage, setErrorMessage] = useState("");
+    const [isClient, setIsClient] = useState(false);
+
+    // Устанавливаем флаг, что приложение запустилось на клиенте
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
 
     const onSubmit: SubmitHandler<ILoginInput> = async (data) => {
         setErrorMessage("");
@@ -35,13 +41,16 @@ const Login: FC = () => {
                 setErrorMessage("Ошибка входа. Некорректный ответ от сервера.");
                 return;
             }
-    
-            // Сохраняем данные в localStorage
-            localStorage.setItem("auth", JSON.stringify({ 
-                user: user.username, 
-                email: user.email, 
-                access 
-            }));
+
+            // Проверка на клиентскую сторону
+            if (isClient) {
+                // Сохраняем данные в localStorage
+                localStorage.setItem("auth", JSON.stringify({ 
+                    user: user.username, 
+                    email: user.email, 
+                    access 
+                }));
+            }
     
             router.push("/");
         } catch (error) {
